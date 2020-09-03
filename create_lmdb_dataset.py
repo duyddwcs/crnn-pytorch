@@ -76,6 +76,7 @@ def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkV
 
 
 if __name__ == "__main__":
+    # Create synth90k lmdb dataset
     data_dir = '../mnt/ramdisk/max/90kDICT32px/'
     lmdb_output_path = '../output/'
     gt_file = os.path.join(data_dir, 'annotation.txt')
