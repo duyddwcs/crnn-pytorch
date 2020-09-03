@@ -4,7 +4,7 @@ The author's original implementation can be found [here](https://github.com/bgsh
 
 A novel neural network architecture, which integrates feature extraction, sequence modeling and transcription into a unified framework, is proposed for image-based sequence recognition tasks, such as scene text recognition and OCR. Below are a few examples from prediction results:
 
-| demo images                                                | VGG-BiLSTM-CTC | VGG-BiLSTM-CTC(case-sensitive) |
+| demo images                                                | CRNN           | CRNN(case sensitive)           |
 | ---                                                        |---             | ---                            |
 | <img src="./images/demo_1.png" width="300">                |   available    |  Available                     |
 | <img src="./images/demo_3.png" width="300">                |   londen       |   Fonden                       |
