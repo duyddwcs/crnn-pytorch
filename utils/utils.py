@@ -143,13 +143,6 @@ def loadData(v, data):
         v.resize_(data.size()).copy_(data)
 
 
-def prettyPrint(v):
-    
-    print('Size {0}, Type: {1}'.format(str(v.size()), v.data.type()))
-    print('| Max: %f | Min: %f | Mean: %f' % (v.max().data[0], v.min().data[0],
-                                              v.mean().data[0]))
-
-
 def assureRatio(img):
     """Ensure imgH <= imgW."""
     b, c, h, w = img.size()
