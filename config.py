@@ -26,7 +26,7 @@ expr_dir = 'expr'   # where to store samples and models
 trainRoot = './synth90k/train'        # path to the dataset
 valRoot = './synth90k/train'          # path to the dataset
 testRoot = ''                         # path to the dataset
-model_path = ''
+model_path = ''                       # path to trained model
 
 # hardware
 cuda = True             # enables cuda
