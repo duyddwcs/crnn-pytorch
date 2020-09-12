@@ -18,6 +18,12 @@ Sequential data or time-series data is any kind of data where the order matters,
 Another example, you can break text up into a sequence of words. Say "I am Vietnamese", if you shuffer the order, it will impact directly to the original meaning. The order of each word in the sequence is really important to express the sentence's contents.
 
 ### Recurrent Neural Networks
+Traditional neural networks, also known as feed-forward neural network, we assume that all inputs (and outputs) are independent of each other, information moves in only one direction, forward, from the input nodes, through the hidden nodes (if any) to the output nodes.
 
+# anh feed forward
+
+A feed-forward neural network are not able to use previous information to effect later ones. But Recurrent Neural Networks address this issue. They are networks with loops that carries information from one step to the next, allowing information to persist.
+
+# anh rnn BPTT vanishing gradient LSTM biLSTM
 
 
