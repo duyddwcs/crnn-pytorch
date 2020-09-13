@@ -26,4 +26,14 @@ A feed-forward neural network are not able to use previous information to effect
 
 # anh rnn BPTT vanishing gradient LSTM biLSTM
 
+- <img src="https://render.githubusercontent.com/render/math?math=x_t"> is the input at time step t.
+- <img src="https://render.githubusercontent.com/render/math?math=s_t"> is the hidden state at time step t. <img src="https://render.githubusercontent.com/render/math?math=s_t"> is calculated based on the previous hidden state and the input at the current step: <img src="https://render.githubusercontent.com/render/math?math=s_t=f(Ux_t + Ws_{t-1})">. The function f usually is a nonlinearity such as tanh or ReLU. The hidden state serve in one's capacity as memory of the network. It capture information about what happened in the previous time steps. 
+- <img src="https://render.githubusercontent.com/render/math?math=o_t"> is the output at step t. The output at step o_t is calculated solely based on the memory at time t. 
+
+Unlike a traditional deep neural network, which uses different parameters at each layer, a RNN shares the same parameters (U, V, W above) across all steps. This reflects the fact that we are performing the same task at each step, just with different inputs. This greatly reduces the total number of parameters we need to learn.
+
+
+
+
+
 
