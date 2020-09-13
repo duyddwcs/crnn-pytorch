@@ -20,7 +20,7 @@ Another example, you can break text up into a sequence of words. Say "I am Vietn
 ### Recurrent Neural Networks
 Traditional neural networks, also known as feed-forward neural network, we assume that all inputs (and outputs) are independent of each other, information moves in only one direction, forward, from the input nodes, through the hidden nodes (if any) to the output nodes.
 
- <img src="./images/nn.png">
+ <img src="./images/nn.png"  width="800">
 
 A feed-forward neural network are not able to use previous information to effect later ones. But Recurrent Neural Networks address this issue. They are networks with loops that carries information from one step to the next, allowing information to persist.
 
