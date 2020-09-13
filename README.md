@@ -13,7 +13,7 @@ A novel neural network architecture, which integrates feature extraction, sequen
 
 ## Recurrent Neural Networks
 ### Sequential Data
-Sequential data or time-series data is any kind of data where the order matters, one thing follows another. Sequential data comes in many forms such as audio, video, text, etc. To illustrate, say you take a screenshot of the video and then you want to predict the action of the person in that video. Harly can you perform such task without knowledge of previous frames of the video. But if you take many screenshots of that person in succession, maybe you will have enough information to make a prediction.
+Sequential data or time-series data is any kind of data where the order matters, one thing follows another. Sequential data comes in many forms such as audio, video, text, etc. To illustrate, say you take a screenshot of the video and then you want to predict the action of the person in that video. Hardly can you perform such task without knowledge of previous frames of the video. But if you take many screenshots of that person in succession, you may have enough information to make a prediction.
 
 Another example, you can break text up into a sequence of words. Say "I am Vietnamese", if you shuffer the order, it will impact directly to the original meaning. The order of each word in the sequence is really important to express the sentence's contents.
 
