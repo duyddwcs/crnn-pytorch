@@ -7,9 +7,9 @@ A novel neural network architecture, which integrates feature extraction, sequen
 | demo images                                                | CRNN           | CRNN(case sensitive)           |
 | ---                                                        |---             | ---                            |
 | <img src="./images/demo_1.png" width="300">                |   available    |  Available                     |
-| <img src="./images/demo_3.png" width="300">                |   londen       |   Fonden                       |
-| <img src="./images/demo_4.png" width="300" height="100">   |    future      |   Future                       |
-| <img src="./images/demo_8.png" width="300" height="100">   |    grred       | Gredl                          |
+| <img src="./images/demo_2.png" width="300">                |   londen       |   Fonden                       |
+| <img src="./images/demo_3.png" width="300" height="100">   |    future      |   Future                       |
+| <img src="./images/demo_4.png" width="300" height="100">   |    grred       | Gredl                          |
 
 ## Recurrent Neural Networks
 ### Sequential Data
@@ -20,11 +20,11 @@ Another example, you can break text up into a sequence of words. Say "I am Vietn
 ### Recurrent Neural Networks
 Traditional neural networks, also known as feed-forward neural network, we assume that all inputs (and outputs) are independent of each other, information moves in only one direction, forward, from the input nodes, through the hidden nodes (if any) to the output nodes.
 
-# anh feed forward
+ <img src="./images/nn.png">
 
 A feed-forward neural network are not able to use previous information to effect later ones. But Recurrent Neural Networks address this issue. They are networks with loops that carries information from one step to the next, allowing information to persist.
 
-# anh rnn BPTT vanishing gradient LSTM biLSTM
+<img src="./images/rnn.png">
 
 - <img src="https://render.githubusercontent.com/render/math?math=x_t"> is the input at time step t.
 - <img src="https://render.githubusercontent.com/render/math?math=s_t"> is the hidden state at time step t. <img src="https://render.githubusercontent.com/render/math?math=s_t"> is calculated based on the previous hidden state and the input at the current step: <img src="https://render.githubusercontent.com/render/math?math=s_t=f(Ux_t + Ws_{t-1})">. The function f usually is a nonlinearity such as tanh or ReLU. The hidden state serve in one's capacity as memory of the network. It capture information about what happened in the previous time steps. 
