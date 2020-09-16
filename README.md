@@ -2,14 +2,7 @@
 A PyTorch implementation of [Convolutional Recurrent Neural Network](https://arxiv.org/abs/1507.05717) for scene text recognition.
 The author's original implementation can be found [here](https://github.com/bgshih/crnn).
 
-A novel neural network architecture, which integrates feature extraction, sequence modeling and transcription into a unified framework, is proposed for image-based sequence recognition tasks, such as scene text recognition and OCR. Below are a few examples from prediction results:
-
-| demo images                                                | CRNN           | CRNN(case sensitive)           |
-| ---                                                        |---             | ---                            |
-| <img src="./images/demo_1.png" width="300">                |   available    |  Available                     |
-| <img src="./images/demo_2.png" width="300">                |   londen       |   Fonden                       |
-| <img src="./images/demo_3.png" width="300" height="100">   |    future      |   Future                       |
-| <img src="./images/demo_4.png" width="300" height="100">   |    grred       | Gredl                          |
+A novel neural network architecture, which integrates feature extraction, sequence modeling and transcription into a unified framework, is proposed for image-based sequence recognition tasks, such as scene text recognition and OCR.
 
 ## Recurrent Neural Networks
 ### Sequential Data
