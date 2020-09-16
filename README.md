@@ -45,10 +45,14 @@ Ex: Image classification.
 #### One to Many
 One to Many (<img src="https://render.githubusercontent.com/render/math?math=T_x">=1, <img src="https://render.githubusercontent.com/render/math?math=T_y">>1) is a kind of RNN architecture is applied in situations that give multiple output for a single input.
 
-Ex:Image captioning, Music generation.
+Ex: Image captioning, Music generation.
 
 #### Many to One
 Many to One (<img src="https://render.githubusercontent.com/render/math?math=T_x">>1, <img src="https://render.githubusercontent.com/render/math?math=T_y">=1) is a kind of RNN architecture is applied in situations when multiple inputs are required for a single output.
 
+Ex: Sentiment classification, Video regconition.
 
-
+#### Many to Many
+Many to Many is a kind of RNN architecture takes multiple input and gives multiple output.
+- (<img src="https://render.githubusercontent.com/render/math?math=T_x">=<img src="https://render.githubusercontent.com/render/math?math=T_y">): This is a kind of RNN architecture where input and output layers have the same size. In other words, every input having a output. Ex: Name entity recognition.
+- (<img src="https://render.githubusercontent.com/render/math?math=T_x">!=<img src="https://render.githubusercontent.com/render/math?math=T_y">): This is a kind of RNN architecture where input and output layers are of different size. Ex: Machine translation.
