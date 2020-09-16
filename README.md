@@ -35,7 +35,7 @@ The pros and cons of a typical RNN architecture:
 
 ### Different types of RNN
 
-<img src="./images/rnn_type.png">
+<img src="./images/RNN_type.jpg">
 
 #### One to One
 One to One RNN (<img src="https://render.githubusercontent.com/render/math?math=T_x">=<img src="https://render.githubusercontent.com/render/math?math=T_y">=1) is the most basic and traditional type of Neural Network giving a single output for a single input where they are independent of previous information.
