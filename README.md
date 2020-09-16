@@ -8,7 +8,7 @@ A novel neural network architecture, which integrates feature extraction, sequen
 ### Sequential Data
 Sequential data or time-series data is any kind of data where the order matters, one thing follows another. Sequential data comes in many forms such as audio, video, text, etc. To illustrate, say you take a screenshot of the video and then you want to predict the action of the person in that video. Hardly can you perform such task without knowledge of previous frames of the video. But if you take many screenshots of that person in succession, you may have enough information to make a prediction.
 
-Another example, you can break text up into a sequence of words. Say "I am Vietnamese", if you shuffer the order, it will impact directly to the original meaning. The order of each word in the sequence is really important to express the sentence's contents.
+Another example, you can break text up into a sequence of words. Say "I am Vietnamese", if you shuffer the order, it will impact directly to the original meaning. The order of each word in the sequence is crucial to express the sentence's contents.
 
 ### Recurrent Neural Networks
 In traditional neural networks, also known as feed-forward neural network, we assume that all inputs (and outputs) are independent of each other, information moves in only one direction, forward, from the input nodes, through the hidden nodes (if any) to the output nodes.
@@ -25,6 +25,22 @@ A feed-forward neural network are not able to use previous information to effect
 
 Unlike a traditional deep neural network, which uses different parameters at each layer, a RNN shares the same parameters (U, V, W above) across all steps. This reflects the fact that we are performing the same task at each step, just with different inputs. This greatly reduces the total number of parameters we need to learn.
 
+The pros and cons of a typical RNN architecture:
+|Advantages|Drawbacks|
+|---|---|
+|- Possibility of processing input of any length|        - Computation being slow|
+|- Model size not increasing with size of input |        - Difficulty of accessing information from a long time ago|
+|- Computation takes into account historical information|- Cannot consider any future input for the current state|
+|- Weights are shared across time||
+
+### Different types of RNN
+
+<img src="./images/rnn_type.png">
+
+#### One to One
+One to One RNN (<img src="https://render.githubusercontent.com/render/math?math=T_x">=<img src="https://render.githubusercontent.com/render/math?math=T_x">=1) is the most basic and traditional type of Neural Network giving a single output for a single input where they are independent of previous information.
+
+#### One to Many
 
 
 
