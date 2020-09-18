@@ -20,8 +20,8 @@ A feed-forward neural network are not able to use previous information to effect
 <img src="./images/rnn_forward.png">
 
 - <img src="https://render.githubusercontent.com/render/math?math=x_t"> is the input at time step t.
-- <img src="https://render.githubusercontent.com/render/math?math=s_t"> is the hidden state at time step t. <img src="https://render.githubusercontent.com/render/math?math=s_t"> is calculated based on the previous hidden state and the input at the current step: <img src="https://render.githubusercontent.com/render/math?math=s_t=f(Ux_t + Ws_{t-1})">. The function f usually is a nonlinearity such as tanh or ReLU. The hidden state serve as memory container of the network. It capture information about what happened in the previous time steps. 
-- <img src="https://render.githubusercontent.com/render/math?math=o_t"> is the output at step t. The output at step <img src="https://render.githubusercontent.com/render/math?math=o_t"> is calculated solely based on the memory at time t. 
+- <img src="https://render.githubusercontent.com/render/math?math=a_t"> is the hidden state at time step t. <img src="https://render.githubusercontent.com/render/math?math=a_t"> is calculated based on the previous hidden state and the input at the current step: <img src="https://render.githubusercontent.com/render/math?math=s_t=f(Ux_t,Wa_{t-1})">. The function f usually is a nonlinearity such as tanh or ReLU. The hidden state serve as memory container of the network. It capture information about what happened in the previous time steps. 
+- <img src="https://render.githubusercontent.com/render/math?math=y_t"> is the output at step t. The output at step <img src="https://render.githubusercontent.com/render/math?math=\hat{y}"> is calculated solely based on the memory at time t. 
 
 Unlike a traditional deep neural network, which uses different parameters at each layer, a RNN shares the same parameters (U, V, W above) across all steps. This reflects the fact that we are performing the same task at each step, just with different inputs. This greatly reduces the total number of parameters we need to learn.
 
@@ -62,7 +62,7 @@ In the training process, recurrent neral network does a forward pass and then co
 
 <img src="./images/rnn_backpropagation.png">
 
-`Backpropogate through time` is nothing more than the standard backpropagation algorithm. The key difference is that we sum up the gradients for W at each time step because the RNN architecture share the parameters across layers. Also note that we are taking the derivative of a vector function with respect to a vector, the result is a matrix (called the Jacobian matrix) whose elements are all the pointwise derivatives.
+`Backpropogate through time` is not much different from the standard backpropagation algorithm. The key difference is that we sum up the gradients for W at each time step because the RNN architecture share the parameters across layers. Also note that we are taking the derivative of a vector function with respect to a vector, the result is a matrix (called the Jacobian matrix) whose elements are all the pointwise derivatives.
 
 While you are using Backpropogating through time, we adjust our weight matrices with the use of a gradient. In the process, gradients are calculated by continuous multiplications of derivatives. The value of these derivatives may be so small that these continuous multiplications may cause the gradient to practically “vanish”.The earlier layers fail to learn anything as the internal weights are barely being adjusted due to extremely small gradient. And that’s the vanishing gradient problem.
 
