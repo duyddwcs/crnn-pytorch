@@ -73,4 +73,43 @@ Because of `vanishing gradient`, RNN’s not being able to learn on earlier time
 On the other hand, when the derivatives  are large, we obtain an opposite effect called `exploding gradient`, which leads to instability in the network. The problem of exploding gradients can be solved by gradient clipping i.e. if gradient is larger than the threshold, scale it by dividing. 
 
 ### LSTM Network
+`Long Short Term Memory` network – usually just called `LSTM` was created as the solution to short-term memory. All recurrent neural network have the form of a chain of repeating modules of neural network. In standard RNN, this repeating module will have a very simple structure, such as a single tanh layer. LSTM also has this chain like structure, but the repeating module has a different structure. Instead of having a single neural network layer, there are four, interacting in a very special way.
 
+<img src="./images/LSTM.png">
+
+The memory cell state, the horizontal line running through the top of the diagram is the core idea behind `LSTM`. The cell state act as a transport highway that transfers relative information all the way down the sequence chain, reducing the effects of short-term memory. As the cell state goes on, information gets added or removed to the cell state via gates. The gates can learn which information is relevant to keep or forget during training.
+
+#### Forget gate
+The forget gate decides what information will be thrown away or kept.  Information from the previous hidden state and information from the current input is passed through the sigmoid function. Values come out between `0` and `1`. `1` represents completely keep the information and `0` represents completely get rid of  it.
+
+<img src="./images/forget_gate.png">
+
+#### Input gate
+The input gate decides what new information we’re going to store in the cell state. We pass the previous hidden state and current input into a sigmoid function. That decides which values will be updated by transforming the values to be between `0` and `1`. `0` means not important at all, and `1` means important. We also pass the hidden state and current input into the tanh function to squish values between -1 and 1 to help regulate the network. Then we multiply the tanh output with the sigmoid output. The sigmoid output will decide which information is important to keep from the tanh output.
+
+<img src="./images/input_gate.png">
+
+#### Cell state
+The next step is update the old cell state <img src="https://render.githubusercontent.com/render/math?math=C_{t-1}"> into the new cell state <img src="https://render.githubusercontent.com/render/math?math=C_t">. First, the cell state gets pointwise multiplied by the forget vector. Then we take the output from the input gate and do a pointwise addition which updates the cell state to new values that the neural network finds relevant.
+
+<img src="./images/cell_state.png">
+
+#### Output gate
+The output gate decides which part of the cell state makes it to the output. First, we pass the previous hidden state and the current input into a sigmoid function. Then we pass the newly modified cell state to the tanh function. We multiply the tanh output with the sigmoid output to decide what information the hidden state should carry.
+
+<img src="./images/output_gate.png">
+
+### bidirectional lstm
+
+
+## CRNN Architecture
+
+### Convolutional Layers
+
+### Recurrent Layers
+
+### Transcription Layers
+
+## Reference
+[Understanding LSTM Networks.](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+[Illustrated Guide to Recurrent Neural Networks.](https://towardsdatascience.com/illustrated-guide-to-recurrent-neural-networks-79e5eb8049c9)
