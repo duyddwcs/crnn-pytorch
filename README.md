@@ -2,7 +2,11 @@
 A PyTorch implementation of [Convolutional Recurrent Neural Network](https://arxiv.org/abs/1507.05717) for scene text recognition.
 The author's original implementation can be found [here](https://github.com/bgshih/crnn).
 
-A novel neural network architecture, which integrates feature extraction, sequence modeling and transcription into a unified framework, is proposed for image-based sequence recognition tasks, such as scene text recognition and OCR.
+Generally speaking, to perform text recognition from natural scene pictures, two steps are required:
+-	Text detection: The problem to be solved is where there is text and how much is the text range.
+- Text recognition: Recognize the positioned text area. 
+
+The CRNN is focus on how to recognize the text area pictures that have been positioned.
 
 ## Recurrent Neural Networks
 ### Sequential Data
@@ -99,17 +103,30 @@ The output gate decides which part of the cell state makes it to the output. Fir
 
 <img src="./images/output_gate.png">
 
-### bidirectional lstm
-
-
 ## CRNN Architecture
+The network architecture of CRNN consists of three components, including the convolutional layers, the recurrent layers, and a transcription layer. The convolutional layers automatically extract a feature sequence from each input image. On top of the convolutional network, a recurrent network is built for making prediction for each frame of the feature sequence, outputted by the convolutional layers. The transcription layer at the top of CRNN is adopted to translate the per-frame predictions by the recurrent layers into a label sequence. Though CRNN is composed of different kinds of network architectures, it can be jointly trained with one loss function.
+
+<img src="./images/crnn_architecture.png">
 
 ### Convolutional Layers
+The first layers of the network use deep CNN to extract features from the input image to obtain a feature map. Before being fed into the network, all the images need to be scaled to the same height. Then a sequence of feature vectors is extracted from the feature maps produced by the component of convolutional layers, which is the input for the recurrent layers. A tweak is made in order to make it suitable for recognizing English texts. There are four pooling layers, but the window size of the last two pooling layers is changed from `2x2` to `1x2`, which means that the height of the image is halved four times but the width is only halved twice. This is because most text images are smaller in height and longer in width. For example, an image containing `10` characters is typically of size `100×32`, from which a feature sequence `25` frames can be generated. This length exceeds the lengths of most English words. On top of that, the rectangular pooling windows yield rectangular receptive, which are beneficial for recognizing some characters that have narrow shapes, such as `i` and `l`. CRNN also introduced the `BatchNormalization` module to accelerate model convergence and shorten the training process.
+
+As the layers of convolution, max-pooling, and elementwise activation function operate on local regions, they are translation invariant. Therefore, each column of the feature maps corresponds to a rectangle region of the original image (termed the receptive field), and such rectangle regions are in the same order to their corresponding columns on the feature maps from left to right. Each vector in the feature sequence is associated with a receptive field, and can be considered as the image descriptor for that region.
+
+<img src="./images/receptive_field.png">
+
+The output size of CNN is `(512, 1, 25)`, `512` feature maps, each of which has a height of `1` and a width of `25`.
 
 ### Recurrent Layers
+Because `RNN` has the problem of `vanishing gradient` and cannot obtain more context information, `LSTM` is used instead. But `LSTM` is one-way, it only uses past information. However, in image-based sequences, the contexts of the two directions are mutually useful and complementary. Combine two `LSTM`, one forward and one backward into a bidirectional `LSTM`. In addition, multiple layers of bidirectional `LSTM` can be stacked, and the deep structure allows a higher level of abstraction than the shallow abstraction.
+
+A feature vector is equivalent to a small rectangular area in the original image. The goal of recurrent layers is to predict which character this rectangular area is, make predictions based on the input feature vector to obtain the softmax probability distribution of all characters, which is a vector whose length is the number of character categories is used as the input to the `CTC` layer.
+
+<img src="./images/deep_bidrectionalLSTM.png">
 
 ### Transcription Layers
 
 ## Reference
 [Understanding LSTM Networks.](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+
 [Illustrated Guide to Recurrent Neural Networks.](https://towardsdatascience.com/illustrated-guide-to-recurrent-neural-networks-79e5eb8049c9)
