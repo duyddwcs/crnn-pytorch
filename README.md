@@ -99,6 +99,9 @@ The output gate decides which part of the cell state makes it to the output. Fir
 
 <img src="./images/output_gate.png">
 
+### bidirectional lstm
+
+
 ## CRNN Architecture
 
 ### Convolutional Layers
@@ -106,3 +109,7 @@ The output gate decides which part of the cell state makes it to the output. Fir
 ### Recurrent Layers
 
 ### Transcription Layers
+
+## Reference
+[Understanding LSTM Networks.](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+[Illustrated Guide to Recurrent Neural Networks.](https://towardsdatascience.com/illustrated-guide-to-recurrent-neural-networks-79e5eb8049c9)
