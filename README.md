@@ -1,16 +1,21 @@
-# CRNN: An End-to-End Trainable Neural Network for Image-based Sequence Recognition 
-A PyTorch implementation of [Convolutional Recurrent Neural Network](https://arxiv.org/abs/1507.05717) for scene text recognition.
-The author's original implementation can be found [here](https://github.com/bgshih/crnn).
+ A PyTorch implementation of [Convolutional Recurrent Neural Network](https://arxiv.org/abs/1507.05717), an End-to-End Trainable Neural Network for Image-based Sequence
+Recognition and Its Application to Scene Text Recognition. The author's original implementation can be found [here](https://github.com/bgshih/crnn).
 
-A novel neural network architecture, which integrates feature extraction, sequence modeling and transcription into a unified framework, is proposed for image-based sequence recognition tasks, such as scene text recognition and OCR.
+# Table of Contents
 
-## Recurrent Neural Networks
-### Sequential Data
+[***Recurrent Neural Network***](https://github.com/duyddwcs/crnn-pytorch#RNN)
+
+[***CRNN Architecture***](https://github.com/duyddwcs/crnn-pytorch#Model)
+
+[***Reference***](https://github.com/duyddwcs/crnn-pytorch#Reference)
+
+# RNN
+## Sequential Data
 Sequential data or time-series data is any kind of data where the order matters, one thing follows another. Sequential data comes in many forms such as audio, video, text, etc. To illustrate, say you take a screenshot of the video and then you want to predict the action of the person in that video. Hardly can you perform such task without knowledge of previous frames of the video. But if you take many screenshots of that person in succession, you may have enough information to make a prediction.
 
 Another example, you can break text up into a sequence of words. Say "I am Vietnamese", if you shuffer the order, it will impact directly to the original meaning. The order of each word in the sequence is crucial to express the sentence's contents.
 
-### Recurrent Neural Networks
+## Recurrent Neural Networks
 In traditional neural networks, also known as feed-forward neural network, we assume that all inputs (and outputs) are independent of each other, information moves in only one direction, forward, from the input nodes, through the hidden nodes (if any) to the output nodes.
 
  <img src="./images/neural_net.png"  width="800">
@@ -33,34 +38,32 @@ The pros and cons of a typical RNN architecture:
 |- Computation takes into account historical information|- Cannot consider any future input for the current state|
 |- Weights are shared across time||
 
-### Different types of RNN
+## Different types of RNN
 
 <img src="./images/RNN_type.jpg">
 
-#### One to One
+### One to One
 One to One RNN (<img src="https://render.githubusercontent.com/render/math?math=T_x">=<img src="https://render.githubusercontent.com/render/math?math=T_y">=1) is the most basic and traditional type of Neural Network giving a single output for a single input where they are independent of previous information.
 
 Ex: Image classification.
 
-#### One to Many
+### One to Many
 One to Many (<img src="https://render.githubusercontent.com/render/math?math=T_x">=1, <img src="https://render.githubusercontent.com/render/math?math=T_y">>1) is a kind of RNN architecture is applied in situations that give multiple output for a single input.
 
 Ex: Image captioning, Music generation.
 
-#### Many to One
+### Many to One
 Many to One (<img src="https://render.githubusercontent.com/render/math?math=T_x">>1, <img src="https://render.githubusercontent.com/render/math?math=T_y">=1) is a kind of RNN architecture is applied in situations when multiple inputs are required for a single output.
 
 Ex: Sentiment classification, Video regconition.
 
-#### Many to Many
+### Many to Many
 Many to Many is a kind of RNN architecture takes multiple input and gives multiple output.
 - (<img src="https://render.githubusercontent.com/render/math?math=T_x">!=<img src="https://render.githubusercontent.com/render/math?math=T_y">): This is a kind of RNN architecture where input and output layers are of different size. Ex: Machine translation.
 - (<img src="https://render.githubusercontent.com/render/math?math=T_x">=<img src="https://render.githubusercontent.com/render/math?math=T_y">): This is a kind of RNN architecture where input and output layers have the same size. In other words, every input having a output. Ex: Name entity recognition.
 
-### The problem of Short-term Memory
+## The problem of Short-term Memory
 In the training process, recurrent neral network does a forward pass and then compares the current output and the ground truth using the cross entropy error to estimate how poorly the network is performing. We typically treat the full sequence  as one sample, so the total error is the sum of the errors at each time step. The gradient is calculated for each time step with respect to the U, V and W weight parameter using the chain rule of differentiation. Going back to every time steps to update the weights starting from the error is called `Backpropogate through time`.
-
-<img src="./images/rnn_backpropagation.png">
 
 `Backpropogate through time` is not much different from the standard backpropagation algorithm. The key difference is that we sum up the gradients for W at each time step because the RNN architecture share the parameters across layers. Also note that we are taking the derivative of a vector function with respect to a vector, the result is a matrix (called the Jacobian matrix) whose elements are all the pointwise derivatives.
 
@@ -72,44 +75,57 @@ Because of `vanishing gradient`, RNN’s not being able to learn on earlier time
 
 On the other hand, when the derivatives  are large, we obtain an opposite effect called `exploding gradient`, which leads to instability in the network. The problem of exploding gradients can be solved by gradient clipping i.e. if gradient is larger than the threshold, scale it by dividing. 
 
-### LSTM Network
+## LSTM Network
 `Long Short Term Memory` network – usually just called `LSTM` was created as the solution to short-term memory. All recurrent neural network have the form of a chain of repeating modules of neural network. In standard RNN, this repeating module will have a very simple structure, such as a single tanh layer. LSTM also has this chain like structure, but the repeating module has a different structure. Instead of having a single neural network layer, there are four, interacting in a very special way.
 
 <img src="./images/LSTM.png">
 
 The memory cell state, the horizontal line running through the top of the diagram is the core idea behind `LSTM`. The cell state act as a transport highway that transfers relative information all the way down the sequence chain, reducing the effects of short-term memory. As the cell state goes on, information gets added or removed to the cell state via gates. The gates can learn which information is relevant to keep or forget during training.
 
-#### Forget gate
+### Forget gate
 The forget gate decides what information will be thrown away or kept.  Information from the previous hidden state and information from the current input is passed through the sigmoid function. Values come out between `0` and `1`. `1` represents completely keep the information and `0` represents completely get rid of  it.
 
 <img src="./images/forget_gate.png">
 
-#### Input gate
+### Input gate
 The input gate decides what new information we’re going to store in the cell state. We pass the previous hidden state and current input into a sigmoid function. That decides which values will be updated by transforming the values to be between `0` and `1`. `0` means not important at all, and `1` means important. We also pass the hidden state and current input into the tanh function to squish values between -1 and 1 to help regulate the network. Then we multiply the tanh output with the sigmoid output. The sigmoid output will decide which information is important to keep from the tanh output.
 
 <img src="./images/input_gate.png">
 
-#### Cell state
+### Cell state
 The next step is update the old cell state <img src="https://render.githubusercontent.com/render/math?math=C_{t-1}"> into the new cell state <img src="https://render.githubusercontent.com/render/math?math=C_t">. First, the cell state gets pointwise multiplied by the forget vector. Then we take the output from the input gate and do a pointwise addition which updates the cell state to new values that the neural network finds relevant.
 
 <img src="./images/cell_state.png">
 
-#### Output gate
+### Output gate
 The output gate decides which part of the cell state makes it to the output. First, we pass the previous hidden state and the current input into a sigmoid function. Then we pass the newly modified cell state to the tanh function. We multiply the tanh output with the sigmoid output to decide what information the hidden state should carry.
 
 <img src="./images/output_gate.png">
 
-### bidirectional lstm
+# Model
+The network architecture of CRNN consists of three components, including the convolutional layers, the recurrent layers, and a transcription layer. The convolutional layers automatically extract a feature sequence from each input image. On top of the convolutional network, a recurrent network is built for making prediction for each frame of the feature sequence, outputted by the convolutional layers. The transcription layer at the top of CRNN is adopted to translate the per-frame predictions by the recurrent layers into a label sequence. Though CRNN is composed of different kinds of network architectures, it can be jointly trained with one loss function.
 
+<img src="./images/crnn_architecture.png">
 
-## CRNN Architecture
+## Convolutional Layers
+The first layers of the network use deep CNN to extract features from the input image to obtain a feature map. Before being fed into the network, all the images need to be scaled to the same height. Then a sequence of feature vectors is extracted from the feature maps produced by the component of convolutional layers, which is the input for the recurrent layers. A tweak is made in order to make it suitable for recognizing English texts. There are four pooling layers, but the window size of the last two pooling layers is changed from `2x2` to `1x2`, which means that the height of the image is halved four times but the width is only halved twice. This is because most text images are smaller in height and longer in width. For example, an image containing `10` characters is typically of size `100×32`, from which a feature sequence `25` frames can be generated. This length exceeds the lengths of most English words. On top of that, the rectangular pooling windows yield rectangular receptive, which are beneficial for recognizing some characters that have narrow shapes, such as `i` and `l`. CRNN also introduced the `BatchNormalization` module to accelerate model convergence and shorten the training process.
 
-### Convolutional Layers
+As the layers of convolution, max-pooling, and elementwise activation function operate on local regions, they are translation invariant. Therefore, each column of the feature maps corresponds to a rectangle region of the original image (termed the receptive field), and such rectangle regions are in the same order to their corresponding columns on the feature maps from left to right. Each vector in the feature sequence is associated with a receptive field, and can be considered as the image descriptor for that region.
 
-### Recurrent Layers
+<img src="./images/receptive_field.png">
 
-### Transcription Layers
+The output size of CNN is `(512, 1, 25)`, `512` feature maps, each of which has a height of `1` and a width of `25`.
 
-## Reference
+## Recurrent Layers
+Because `RNN` has the problem of `vanishing gradient` and cannot obtain more context information, `LSTM` is used instead. But `LSTM` is one-way, it only uses past information. However, in image-based sequences, the contexts of the two directions are mutually useful and complementary. Combine two `LSTM`, one forward and one backward into a bidirectional `LSTM`. In addition, multiple layers of bidirectional `LSTM` can be stacked, and the deep structure allows a higher level of abstraction than the shallow abstraction.
+
+A feature vector is equivalent to a small rectangular area in the original image. The goal of recurrent layers is to predict which character this rectangular area is, make predictions based on the input feature vector to obtain the softmax probability distribution of all characters, which is a vector whose length is the number of character categories is used as the input to the `CTC` layer.
+
+<img src="./images/deep_bidrectionalLSTM.png">
+
+## Transcription Layers
+
+# Reference
 [Understanding LSTM Networks.](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+
 [Illustrated Guide to Recurrent Neural Networks.](https://towardsdatascience.com/illustrated-guide-to-recurrent-neural-networks-79e5eb8049c9)
