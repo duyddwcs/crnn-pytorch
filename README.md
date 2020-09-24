@@ -1,11 +1,22 @@
  A PyTorch implementation of [Convolutional Recurrent Neural Network](https://arxiv.org/abs/1507.05717), an End-to-End Trainable Neural Network for Image-based Sequence
 Recognition and Its Application to Scene Text Recognition. The author's original implementation can be found [here](https://github.com/bgshih/crnn).
 
+Below are a few examples from prediction results:
+
+| demo images                                                | CRNN           | CRNN(case sensitive)           |
+| ---                                                        |---             | ---                            |
+| <img src="./images/demo_1.png" width="300">                |   available    |  Available                     |
+| <img src="./images/demo_2.png" width="300">                |   london       |   Londen                       |
+| <img src="./images/demo_3.png" width="300">                |   greenstead   |   Greenstead                   |
+| <img src="./images/demo_4.png" width="300" height="100">   |    grred       | Gredl                          |
+
 # Table of Contents
 
 [***Recurrent Neural Network***](https://github.com/duyddwcs/crnn-pytorch#RNN)
 
 [***CRNN Architecture***](https://github.com/duyddwcs/crnn-pytorch#Model)
+
+[***Inference***](https://github.com/duyddwcs/crnn-pytorch#Inference)
 
 [***Reference***](https://github.com/duyddwcs/crnn-pytorch#Reference)
 
@@ -22,11 +33,11 @@ In traditional neural networks, also known as feed-forward neural network, we as
 
 A feed-forward neural network are not able to use previous information to effect later ones. But Recurrent Neural Networks address this issue. They are networks with loops that carries information from one step to the next, allowing information to persist.
 
-<img src="./images/rnn_forward.png">
+<img src="./images/rnn.jpg">
 
 - <img src="https://render.githubusercontent.com/render/math?math=x_t"> is the input at time step t.
-- <img src="https://render.githubusercontent.com/render/math?math=a_t"> is the hidden state at time step t. <img src="https://render.githubusercontent.com/render/math?math=a_t"> is calculated based on the previous hidden state and the input at the current step: <img src="https://render.githubusercontent.com/render/math?math=s_t=f(Ux_t,Wa_{t-1})">. The function f usually is a nonlinearity such as tanh or ReLU. The hidden state serve as memory container of the network. It capture information about what happened in the previous time steps. 
-- <img src="https://render.githubusercontent.com/render/math?math=\hat{y_t}"> is the output at step t. The output at step <img src="https://render.githubusercontent.com/render/math?math=\hat{y_t}"> is calculated solely based on the memory at time t. 
+- <img src="https://render.githubusercontent.com/render/math?math=s_t"> is the hidden state at time step t. <img src="https://render.githubusercontent.com/render/math?math=s_t"> is calculated based on the previous hidden state and the input at the current step: <img src="https://render.githubusercontent.com/render/math?math=s_t=f(Ux_t,Ws_{t-1})">. The function f usually is a nonlinearity such as tanh or ReLU. The hidden state serve as memory container of the network. It capture information about what happened in the previous time steps. 
+- <img src="https://render.githubusercontent.com/render/math?math=\hat{o_t}"> is the output at step t. The output at step <img src="https://render.githubusercontent.com/render/math?math=\hat{o_t}"> is calculated solely based on the memory at time t. 
 
 Unlike a traditional deep neural network, which uses different parameters at each layer, a RNN shares the same parameters (U, V, W above) across all steps. This reflects the fact that we are performing the same task at each step, just with different inputs. This greatly reduces the total number of parameters we need to learn.
 
@@ -121,11 +132,43 @@ Because `RNN` has the problem of `vanishing gradient` and cannot obtain more con
 
 A feature vector is equivalent to a small rectangular area in the original image. The goal of recurrent layers is to predict which character this rectangular area is, make predictions based on the input feature vector to obtain the softmax probability distribution of all characters, which is a vector whose length is the number of character categories is used as the input to the `CTC` layer.
 
-<img src="./images/deep_bidrectionalLSTM.png">
+<img src="./images/deepBidirectionalLSTM.png">
 
 ## Transcription Layers
+Transcription is the process of converting the predictions made by RNN layers for each feature vector into label sequences using `CTC`. `Connectionist Temporal Classification (CTC)` is a type of Neural Network output helpful in tackling sequence problems. Using `CTC` ensures that one does not need an aligned dataset (time-consuming and boring), which makes the training process more straightforward. 
+
+When the RNN performs classification per each time step, there will inevitably be a lot of redundant information, such as a letter that is recognized twice or three time in a row. To solve this issue, `CTC` merge the consecutive repeated characters into one to get the final result. For example, if the output from the network is `hhhey`, then according to the `CTC` encoding scheme, the character sequences gets collapsed to `hey`. This seems to be a good method, but there is a problem. If it is words like `book` and `hello`, you will get `bok` and `helo` after merging consecutive characters. For handling those cases, `CTC` insert a `-` between the repeated characters in the text label. If there are blank characters separated, consecutive identical characters will not be merged. Let’s consider the word `meet`, possible encodings for it will be, `mm-ee-ee-t`, `mmm-e-e-ttt`, wrong encoding will be `mm-eee-tt`, as it’ll result in `met` when decoded. 
+
+In the training phase, we need to obtain the loss function based on these probability distribution vectors and the corresponding text labels to train the neural network model.
+
+<img src="./images/CTC.png">
+
+As shown in the figure above, for the simplest character recognition with a sequence of 2, there are two time steps (t0, t1) and three possible characters are "a", "b" and "-", we get two probability distribution vectors. If the maximum probability path decoding method is adopted, the probability of `–` is the largest, that is, the probability that the real character is empty is 0.6*0.6=0.36. But there are multiple alignment combinations for the character `a`, `aa`, `a-` and `-a` all represent `a`, so the probability of outputting `a` should be the sum of three: 0.4*0.4+0.4*0.6+0.6*0.4=0.64
+
+So the probability of `a` is higher than the probability of empty. If the label text is `a`, the loss function is calculated by calculating the sum of the scores of all possible alignment combinations (or paths) that are `a` in the image. The given output probability distribution matrix of RNN is y={<img src="https://render.githubusercontent.com/render/math?math=y_1">, <img src="https://render.githubusercontent.com/render/math?math=y_2">, ..., <img src="https://render.githubusercontent.com/render/math?math=y_T">} where T is the length of the sequence, and the total probability that is finally mapped to the label text l is:
+
+<img src="./images/equation1.png">
+
+where B(π) represents the set of all paths of text l after transformation from sequence to sequence mapping function B, and π is one of the paths. The probability of each path is the product of the scores of the corresponding characters in each time step.
+
+We just need to train the network to maximize this probability value. For technical reasons, we re-formulate into an equivalent problem: minimize the loss of the training dataset, where the loss is the negative log-likelihood of conditional probability of ground truth:
+
+<img src="./images/equation2.png">
+
+where <img src="https://render.githubusercontent.com/render/math?math=I_i"> is the training image, <img src="https://render.githubusercontent.com/render/math?math=l_i"> is the ground truth label sequence and <img src="https://render.githubusercontent.com/render/math?math=y_i"> is the sequence produced by the recurrent and convolutional layers from <img src="https://render.githubusercontent.com/render/math?math=I_i">.
+
+This method of mapping transformation and the sum of all possible path probabilities eliminates the need for `CTC` to accurately segment the original input character sequence.	
+
+# Inference
+In the prediction process, first use the CNN network to extract the features of the text image, then use the RNN to fuse the feature vectors to extract the context features of the character sequence. But we don’t know any text in advance, if we calculate all the paths of each possible text as above, for a long time step and a long character sequence, the amount of calculation is very large. This is not A feasible solution.
+
+We know that the output of the RNN at each time step is the probability distribution of all character categories, that is, a vector containing the score of each character. We take the character with the highest probability as the output character of each time step then splice them to obtain a sequence path, that is, the maximum probability path. The final predicted text result is obtained according to the merge sequence method introduced above.
 
 # Reference
 [Understanding LSTM Networks.](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
 
 [Illustrated Guide to Recurrent Neural Networks.](https://towardsdatascience.com/illustrated-guide-to-recurrent-neural-networks-79e5eb8049c9)
+
+[Chinese text detection and recognition](https://blog.csdn.net/qq_24819773/article/details/104605994#2.2%E3%80%81CNN%E5%8D%B7%E7%A7%AF%E5%B1%82%E7%BB%93%E6%9E%84)
+
+[An Intuitive Explanation of Connectionist Temporal Classification](https://towardsdatascience.com/intuitively-understanding-connectionist-temporal-classification-3797e43a86c)
