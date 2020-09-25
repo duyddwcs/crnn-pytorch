@@ -149,7 +149,8 @@ So the probability of `a` is higher than the probability of empty. If the label 
 
 <img src="./images/equation1.png">
 
-where B(π) represents the set of all paths of text l after transformation from sequence to sequence mapping function B, and π is one of the paths. The probability of each path is the product of the scores of the corresponding characters in each time step.
+where B(π) represents the set of all paths of text l after transformation from sequence to sequence mapping function B, and π is one of the paths. The probability of each path is the product of the scores of the corresponding characters in each time step. the probability of π is defined as <img src="https://render.githubusercontent.com/render/math?math=p(\pi |y) = \prod_{t=1}^{T} y_{\pi t}^{t}">, <img src="https://render.githubusercontent.com/render/math?math=y_{\pi t}^{t}"> is the probability of having label πt at time
+step t.
 
 We just need to train the network to maximize this probability value. For technical reasons, we re-formulate into an equivalent problem: minimize the loss of the training dataset, where the loss is the negative log-likelihood of conditional probability of ground truth:
 
