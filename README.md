@@ -14,7 +14,7 @@ Below are a few examples from prediction results:
 
 [***Recurrent Neural Network***](https://github.com/duyddwcs/crnn-pytorch#Recurrent-Neural-Network)
 
-[***CRNN Architecture***](https://github.com/duyddwcs/crnn-pytorch#Model)
+[***CRNN Architecture***](https://github.com/duyddwcs/crnn-pytorch#CRNN-Architecture)
 
 [***Inference***](https://github.com/duyddwcs/crnn-pytorch#Inference)
 
@@ -113,7 +113,7 @@ The output gate decides which part of the cell state makes it to the output. Fir
 
 <img src="./images/output_gate.png">
 
-# Model
+# CRNN Architecture
 The network architecture of CRNN consists of three components, including the convolutional layers, the recurrent layers, and a transcription layer. The convolutional layers automatically extract a feature sequence from each input image. On top of the convolutional network, a recurrent network is built for making prediction for each frame of the feature sequence, outputted by the convolutional layers. The transcription layer at the top of CRNN is adopted to translate the per-frame predictions by the recurrent layers into a label sequence. Though CRNN is composed of different kinds of network architectures, it can be jointly trained with one loss function.
 
 <img src="./images/crnn_architecture.png">
