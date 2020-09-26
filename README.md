@@ -12,7 +12,7 @@ Below are a few examples from prediction results:
 
 # Table of Contents
 
-[***Recurrent Neural Network***](https://github.com/duyddwcs/crnn-pytorch#RNN)
+[***Recurrent Neural Network***](https://github.com/duyddwcs/crnn-pytorch#Recurrent-Neural-Network)
 
 [***CRNN Architecture***](https://github.com/duyddwcs/crnn-pytorch#Model)
 
@@ -20,7 +20,7 @@ Below are a few examples from prediction results:
 
 [***Reference***](https://github.com/duyddwcs/crnn-pytorch#Reference)
 
-# RNN
+# Recurrent Neural Network
 ## Sequential Data
 Sequential data or time-series data is any kind of data where the order matters, one thing follows another. Sequential data comes in many forms such as audio, video, text, etc. To illustrate, say you take a screenshot of the video and then you want to predict the action of the person in that video. Hardly can you perform such task without knowledge of previous frames of the video. But if you take many screenshots of that person in succession, you may have enough information to make a prediction.
 
